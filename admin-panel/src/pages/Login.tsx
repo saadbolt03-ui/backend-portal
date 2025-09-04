@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { Eye, EyeOff, Shield } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 interface LoginForm {
   email: string
@@ -29,14 +29,14 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800">
-      <div className="max-w-md w-full space-y-8 p-8">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="max-w-md w-full mx-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
           <div className="text-center mb-8">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center mb-4">
-              <Shield className="w-8 h-8 text-white" />
+            <div className="mx-auto w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+              <span className="text-white font-bold text-lg">SF</span>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900">Admin Panel</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Admin Panel</h2>
             <p className="mt-2 text-gray-600">Saher Flow Solutions</p>
           </div>
 
@@ -107,14 +107,14 @@ export default function Login() {
                   Signing in...
                 </div>
               ) : (
-                'Sign in to Admin Panel'
+                'Sign in'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
-              Admin access only. Contact support if you need assistance.
+              Admin access only
             </p>
           </div>
         </div>

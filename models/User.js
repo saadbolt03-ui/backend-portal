@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
   lastLogin: Date,
+  lastLoginIP: String,
   isActive: {
     type: Boolean,
     default: true

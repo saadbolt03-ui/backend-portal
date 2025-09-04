@@ -39,11 +39,12 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 ${
+      <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        {/* Logo and Brand */}
-        <div className="flex items-center justify-between h-20 px-6 border-b border-gray-200 bg-gradient-to-r from-primary-600 to-primary-700">
+        
+        {/* Logo and Brand - Fixed Header */}
+        <div className="flex items-center justify-between h-20 px-6 border-b border-gray-200 bg-gradient-to-r from-primary-600 to-primary-700 flex-shrink-0">
           <div className="flex items-center">
             <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
               <Shield className="w-6 h-6 text-primary-600" />
@@ -61,42 +62,46 @@ export default function Layout({ children }: LayoutProps) {
           </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="mt-8 px-4">
-          <div className="space-y-2">
-            {navigation.map((item) => {
-              const Icon = item.icon
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
-                    isActive(item.href)
-                      ? 'bg-primary-50 text-primary-700 shadow-sm border-l-4 border-primary-600'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <Icon className={`mr-4 h-5 w-5 ${
-                    isActive(item.href) ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'
-                  }`} />
-                  {item.name}
-                </Link>
-              )
-            })}
-          </div>
-        </nav>
+        {/* Navigation - Scrollable Middle Section */}
+        <div className="flex-1 overflow-y-auto py-6">
+          <nav className="px-4">
+            <div className="space-y-2">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={`group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                      isActive(item.href)
+                        ? 'bg-primary-50 text-primary-700 shadow-sm border-l-4 border-primary-600'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <Icon className={`mr-4 h-5 w-5 flex-shrink-0 ${
+                      isActive(item.href) ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'
+                    }`} />
+                    <span className="truncate">{item.name}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          </nav>
+        </div>
 
-        {/* User Profile Section */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-200 bg-gray-50">
+        {/* User Profile Section - Fixed Footer */}
+        <div className="flex-shrink-0 p-6 border-t border-gray-200 bg-gray-50">
           <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
               <span className="text-white font-bold text-lg">
                 {user?.firstName?.[0]}{user?.lastName?.[0]}
               </span>
             </div>
-            <div className="ml-4 flex-1">
-              <p className="text-sm font-semibold text-gray-900">{user?.firstName} {user?.lastName}</p>
+            <div className="ml-4 flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 truncate">
+                {user?.firstName} {user?.lastName}
+              </p>
               <p className="text-xs text-gray-500 truncate">{user?.email}</p>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 mt-1">
                 Administrator
@@ -107,8 +112,8 @@ export default function Layout({ children }: LayoutProps) {
             onClick={logout}
             className="w-full flex items-center justify-center px-4 py-3 text-sm font-medium text-gray-600 hover:bg-white hover:text-gray-900 rounded-xl transition-all duration-200 border border-gray-200 hover:border-gray-300 hover:shadow-sm"
           >
-            <LogOut className="mr-3 h-4 w-4" />
-            Sign out
+            <LogOut className="mr-3 h-4 w-4 flex-shrink-0" />
+            <span>Sign out</span>
           </button>
         </div>
       </div>

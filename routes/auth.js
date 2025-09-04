@@ -171,8 +171,30 @@ router.post('/login', [
       });
     }
 
-    // Update last login
+    // Get user's IP address
+    const getUserIP = (req) => {
+      return req.headers['x-forwarded-for'] || 
+             req.headers['x-real-ip'] || 
+             req.connection.remoteAddress || 
+             req.socket.remoteAddress ||
+             (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
+             req.ip;
+    };
+
+    const rawIP = getUserIP(req);
+    
+    // Convert IPv6 loopback to IPv4 for better readability
+    let userIP = rawIP;
+    if (rawIP === '::1' || rawIP === '::ffff:127.0.0.1') {
+      userIP = '127.0.0.1'; // localhost
+    } else if (rawIP && rawIP.startsWith('::ffff:')) {
+      // Extract IPv4 from IPv6-mapped address
+      userIP = rawIP.substring(7);
+    }
+
+    // Update last login and IP
     user.lastLogin = new Date();
+    user.lastLoginIP = userIP;
     await user.save({ validateBeforeSave: false });
 
     // Generate token
@@ -191,7 +213,8 @@ router.post('/login', [
           company: user.company,
           role: user.role,
           isEmailVerified: user.isEmailVerified,
-          lastLogin: user.lastLogin
+          lastLogin: user.lastLogin,
+          lastLoginIP: user.lastLoginIP
         }
       }
     });

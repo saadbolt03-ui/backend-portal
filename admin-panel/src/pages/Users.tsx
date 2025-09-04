@@ -4,15 +4,12 @@ import toast from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { 
   Search, 
-  Filter, 
   Download, 
   UserCheck, 
   Mail, 
   Calendar,
   Edit,
   Trash2,
-  Plus,
-  X,
   Save,
   Shield,
   User as UserIcon
@@ -48,7 +45,6 @@ export default function Users() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterRole, setFilterRole] = useState('all')
   const [filterVerified, setFilterVerified] = useState('all')
-  const [filterActive, setFilterActive] = useState('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [showModal, setShowModal] = useState(false)
@@ -98,7 +94,6 @@ export default function Users() {
     
     setSubmitting(true)
     try {
-      // Update user profile
       await usersAPI.updateUser(editingUser._id, {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -119,7 +114,7 @@ export default function Users() {
   }
 
   const deleteUser = async (userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
+    if (!confirm(`Are you sure you want to delete ${userName}?`)) {
       return
     }
 
@@ -143,11 +138,8 @@ export default function Users() {
     const matchesVerified = filterVerified === 'all' || 
       (filterVerified === 'verified' && user.isEmailVerified) ||
       (filterVerified === 'unverified' && !user.isEmailVerified)
-    const matchesActive = filterActive === 'all' ||
-      (filterActive === 'active' && user.isActive) ||
-      (filterActive === 'inactive' && !user.isActive)
     
-    return matchesSearch && matchesRole && matchesVerified && matchesActive
+    return matchesSearch && matchesRole && matchesVerified
   })
 
   const exportUsers = () => {
@@ -177,7 +169,7 @@ export default function Users() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     )
   }
@@ -186,8 +178,8 @@ export default function Users() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
-          <p className="text-gray-600 mt-1">Manage all registered users and their permissions</p>
+          <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+          <p className="text-gray-600">Manage registered users</p>
         </div>
         <button onClick={exportUsers} className="btn-secondary flex items-center">
           <Download className="w-4 h-4 mr-2" />
@@ -195,9 +187,9 @@ export default function Users() {
         </button>
       </div>
 
-      {/* Enhanced Filters */}
+      {/* Filters */}
       <div className="card">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
@@ -224,23 +216,12 @@ export default function Users() {
             onChange={(e) => setFilterVerified(e.target.value)}
             className="input-field"
           >
-            <option value="all">All Verification</option>
+            <option value="all">All Status</option>
             <option value="verified">Verified</option>
             <option value="unverified">Unverified</option>
           </select>
-
-          <select
-            value={filterActive}
-            onChange={(e) => setFilterActive(e.target.value)}
-            className="input-field"
-          >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
           
           <button onClick={loadUsers} className="btn-primary">
-            <Filter className="w-4 h-4 mr-2" />
             Refresh
           </button>
         </div>
@@ -252,22 +233,22 @@ export default function Users() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   User
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Company
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Role
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Last Login
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -277,13 +258,13 @@ export default function Users() {
                 <tr key={user._id} className="table-row">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-xl flex items-center justify-center shadow-sm">
-                        <span className="text-white font-semibold text-sm">
+                      <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center">
+                        <span className="text-white font-medium text-sm">
                           {user.firstName[0]}{user.lastName[0]}
                         </span>
                       </div>
                       <div className="ml-4">
-                        <div className="text-sm font-semibold text-gray-900">
+                        <div className="text-sm font-medium text-gray-900">
                           {user.firstName} {user.lastName}
                         </div>
                         <div className="text-sm text-gray-500">{user.email}</div>
@@ -294,7 +275,7 @@ export default function Users() {
                     {user.company}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       user.role === 'admin' 
                         ? 'bg-purple-100 text-purple-800' 
                         : 'bg-gray-100 text-gray-800'
@@ -306,18 +287,18 @@ export default function Users() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center space-x-2">
                       {user.isEmailVerified ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           <UserCheck className="w-3 h-3 mr-1" />
                           Verified
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                           <Mail className="w-3 h-3 mr-1" />
                           Pending
                         </span>
                       )}
                       {!user.isActive && (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
                           Inactive
                         </span>
                       )}
@@ -338,14 +319,12 @@ export default function Users() {
                       <button
                         onClick={() => openEditModal(user)}
                         className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
-                        title="Edit user"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => deleteUser(user._id, `${user.firstName} ${user.lastName}`)}
                         className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
-                        title="Delete user"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -361,7 +340,7 @@ export default function Users() {
         {totalPages > 1 && (
           <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              Showing page {currentPage} of {totalPages} ({filteredUsers.length} users)
+              Page {currentPage} of {totalPages}
             </div>
             <div className="flex space-x-2">
               <button
@@ -399,12 +378,11 @@ export default function Users() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                First Name *
+                First Name
               </label>
               <input
                 {...register('firstName', { required: 'First name is required' })}
                 className="input-field"
-                placeholder="Enter first name"
               />
               {errors.firstName && (
                 <p className="mt-1 text-sm text-red-600">{errors.firstName.message}</p>
@@ -413,12 +391,11 @@ export default function Users() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name *
+                Last Name
               </label>
               <input
                 {...register('lastName', { required: 'Last name is required' })}
                 className="input-field"
-                placeholder="Enter last name"
               />
               {errors.lastName && (
                 <p className="mt-1 text-sm text-red-600">{errors.lastName.message}</p>
@@ -428,7 +405,7 @@ export default function Users() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email *
+              Email
             </label>
             <input
               {...register('email', { 
@@ -440,7 +417,6 @@ export default function Users() {
               })}
               type="email"
               className="input-field"
-              placeholder="Enter email address"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -449,12 +425,11 @@ export default function Users() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Company *
+              Company
             </label>
             <input
               {...register('company', { required: 'Company is required' })}
               className="input-field"
-              placeholder="Enter company name"
             />
             {errors.company && (
               <p className="mt-1 text-sm text-red-600">{errors.company.message}</p>
@@ -463,7 +438,7 @@ export default function Users() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Role *
+              Role
             </label>
             <select
               {...register('role', { required: 'Role is required' })}
@@ -472,9 +447,6 @@ export default function Users() {
               <option value="user">User</option>
               <option value="admin">Admin</option>
             </select>
-            {errors.role && (
-              <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
-            )}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -482,7 +454,7 @@ export default function Users() {
               <input
                 {...register('isEmailVerified')}
                 type="checkbox"
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <label className="ml-2 block text-sm text-gray-900">
                 Email Verified
@@ -493,7 +465,7 @@ export default function Users() {
               <input
                 {...register('isActive')}
                 type="checkbox"
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
               <label className="ml-2 block text-sm text-gray-900">
                 Account Active
