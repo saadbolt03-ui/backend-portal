@@ -29,15 +29,19 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full mx-4">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-800">
+      <div className="max-w-md w-full space-y-8 p-6">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
           <div className="text-center mb-8">
-            <div className="mx-auto w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
-              <span className="text-white font-bold text-lg">SF</span>
+            <div className="mx-auto mb-6">
+              <img 
+                src="https://res.cloudinary.com/drnak5yb2/image/upload/v1755589239/output-onlinepngtools_fnkcov.png" 
+                alt="Saher Flow Solutions" 
+                className="h-16 w-auto mx-auto"
+              />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">Admin Panel</h2>
-            <p className="mt-2 text-gray-600">Saher Flow Solutions</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h2>
+            <p className="text-gray-600">Saher Flow Solutions</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -99,7 +103,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full btn-primary py-3 text-base disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
             >
               {isLoading ? (
                 <div className="flex items-center justify-center">
@@ -107,14 +111,14 @@ export default function Login() {
                   Signing in...
                 </div>
               ) : (
-                'Sign in'
+                'Sign in to Admin Panel'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500">
-              Admin access only
+            <p className="text-sm text-gray-500">
+              Admin access only. Contact support if you need assistance.
             </p>
           </div>
         </div>
